@@ -59,7 +59,7 @@ public class T9015Auto_Beacon extends T9015Hardware {
                 break;
             case 4:
                 // allow the encoder to reset
-                run_without_drive_encoders();
+                run_without_drive_encoders();           // TODO WHY THIS??
                 // if (have_drive_encoders_reset())
                     move_to_next_state();
                 break;

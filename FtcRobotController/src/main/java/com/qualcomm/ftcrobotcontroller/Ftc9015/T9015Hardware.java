@@ -54,6 +54,8 @@ public class T9015Hardware extends OpMode
     private final double WHEEL_CIRCUMFERENCE = WHEEL_DIAMETER * Math.PI;
     private final int TURN_45_DEGREES = 1000;
 
+    final int HANGER_45_DEGREES = 1000; // TODO to be tested out
+
 
 
     public T9015Hardware()
@@ -1271,9 +1273,9 @@ public class T9015Hardware extends OpMode
             v_motor_right_hang.setPower (power);
     }
 
-    protected boolean has_hang_moved(double count, double power) {
+    protected boolean has_hang_moved(double degrees, double power) {
         set_hang_power(power);
-        if (have_hang_encoders_reached(count)) {
+        if (have_hang_encoders_reached(convertHangerDegreesToTicks(degrees))) {
             reset_hang_encoders();
             set_hang_power(0.0f);
             return true;
@@ -1703,6 +1705,11 @@ public class T9015Hardware extends OpMode
     protected double convertDegreesToTicks(double degrees){
         return Math.round((degrees * TURN_45_DEGREES / 45));
     }
+
+
+    protected double convertHangerDegreesToTicks(double degrees){
+        return Math.round((degrees * HANGER_45_DEGREES / 45));
+    }
     //--------------------------------------------------------------------------
     //
     // v_warning_generated
@@ -1829,7 +1836,7 @@ public class T9015Hardware extends OpMode
     // v_servo_climber
     //
     /**
-     * Use to drop the climber
+     * Use to position the pushing pad
      */
     private Servo v_servo_beacon;
 
