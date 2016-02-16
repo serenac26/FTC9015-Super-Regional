@@ -43,11 +43,27 @@ public class T9015Test extends T9015Hardware {
                 distance    = 2000;  //set distance to move (ticks)
                 power = 0.2;  //set power
                 if (first_time_in_state()) {
-                    has_hang_forward(distance,power);
+                    hang_backward();
                 }
                 telemetry.addData("4 - ","backward=" + distance + "p=" + power); //displays distance and power to phone screen
-                if (has_hang_forward(distance, power))//when encoder has reached corresponding ticks for set distance move to the next state
+                if (has_hang_moved(distance, power))//when encoder has reached corresponding ticks for set distance move to the next state
                     move_to_next_state();
+                break;
+            case 2:
+                // allow the encoder to reset
+                if (have_hang_encoders_reset())
+                    move_to_next_state();
+                break;
+            case 3:
+                distance    = 3000;  //set distance to move (ticks)
+                power = 0.25;  //set power
+                if (first_time_in_state()) {
+                    hang_forward();
+                }
+                telemetry.addData("4 - ","forward=" + distance + "p=" + power); //displays distance and power to phone screen
+                if (has_hang_moved(distance, power))//when encoder has reached corresponding ticks for set distance move to the next state
+                    move_to_next_state();
+                break;
             default:
                 set_hang_power(0);
                 //

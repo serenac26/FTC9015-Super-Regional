@@ -430,6 +430,16 @@ public class T9015Hardware extends OpMode
 
     }
 
+    void hang_forward()
+    {
+        set_hang_forward();
+    }
+
+    void hang_backward()
+    {
+        set_hang_backward();
+    }
+
     void go_forward()
     {
         set_direction_forward(true);
@@ -468,6 +478,13 @@ public class T9015Hardware extends OpMode
             if (v_motor_right_hang != null)
                  v_motor_right_hang.setDirection (DcMotor.Direction.REVERSE);
      }
+
+    void set_hang_backward() {
+        if (v_motor_left_hang != null)
+            v_motor_left_hang.setDirection(DcMotor.Direction.REVERSE);
+        if (v_motor_right_hang != null)
+            v_motor_right_hang.setDirection (DcMotor.Direction.FORWARD);
+    }
 
     void turn(boolean left) {
         if (left) {
@@ -1040,6 +1057,33 @@ public class T9015Hardware extends OpMode
 
     } // a_right_encoder_count
 
+    int right_hang_encoder_count = 0;
+    int right_hang_encoder_count ()
+    {
+        int l_return = 0;
+
+        if (v_motor_right_hang != null)
+        {
+            l_return = v_motor_right_hang.getCurrentPosition ();
+        }
+        right_hang_encoder_count = l_return;
+        return l_return;
+
+    }
+
+    int left_hang_encoder_count = 0;
+    int left_hang_encoder_count ()
+    {
+        int l_return = 0;
+
+        if (v_motor_left_hang != null)
+        {
+            l_return = v_motor_left_hang.getCurrentPosition ();
+        }
+        left_hang_encoder_count = l_return;
+        return l_return;
+
+    }
     //--------------------------------------------------------------------------
     //
     // has_left_drive_encoder_reached
@@ -1227,7 +1271,7 @@ public class T9015Hardware extends OpMode
             v_motor_right_hang.setPower (power);
     }
 
-    protected boolean has_hang_forward(double count, double power) {
+    protected boolean has_hang_moved(double count, double power) {
         set_hang_power(power);
         if (have_hang_encoders_reached(count)) {
             reset_hang_encoders();
@@ -1417,6 +1461,80 @@ public class T9015Hardware extends OpMode
 
     } // have_drive_encoders_reset
 
+    boolean has_right_hang_encoder_reset ()
+    {
+        //
+        // Assume failure.
+        //
+        boolean l_return = false;
+
+        //
+        // Has the right encoder reached zero?
+        //
+        if (right_hang_encoder_count() == 0)
+        {
+            //
+            // Set the status to a positive indication.
+            //
+            l_return = true;
+        }
+
+        //
+        // Return the status.
+        //
+        return l_return;
+
+    }
+
+    boolean has_left_hang_encoder_reset ()
+    {
+        //
+        // Assume failure.
+        //
+        boolean l_return = false;
+
+        //
+        // Has the right encoder reached zero?
+        //
+        if (left_hang_encoder_count() == 0)
+        {
+            //
+            // Set the status to a positive indication.
+            //
+            l_return = true;
+        }
+
+        //
+        // Return the status.
+        //
+        return l_return;
+
+    }
+
+    boolean have_hang_encoders_reset ()
+    {
+        //
+        // Assume failure.
+        //
+        boolean l_return = false;
+
+        //
+        // Have the encoders reached zero?
+        //
+        if (has_left_hang_encoder_reset() && has_right_hang_encoder_reset ())
+        {
+            //
+            // Set the status to a positive indication.
+            //
+            l_return = true;
+        }
+
+        //
+        // Return the status.
+        //
+        return l_return;
+
+    }
     //--------------------------------------------------------------------------
     //
     // a_puller_power
