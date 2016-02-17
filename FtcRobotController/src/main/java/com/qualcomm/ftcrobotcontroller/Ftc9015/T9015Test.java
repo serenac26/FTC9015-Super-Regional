@@ -37,12 +37,12 @@ public class T9015Test extends T9015Hardware {
             case 0:
                 // Reset the encoders to ensure they are at a known good value.
                 telemetry.addData("0 - ","init");
-                reset_hang_encoders();
+                set_hang_encoders();
                 move_to_next_state();
                 break;
             case 1:
                 //only need to initialize encoders on first time in state
-                degrees    = 45;  //set distance to move (ticks)
+                degrees    = 60;  //set distance to move (ticks)
                 power = 0.2;  //set power
                 if (first_time_in_state()) {
                     hang_forward();
@@ -57,9 +57,10 @@ public class T9015Test extends T9015Hardware {
                     move_to_next_state();
                 break;
             case 3:
-                degrees = 45;  //set distance to move (ticks)
-                power = 0.25;  //set power
+                degrees = 15;  //set distance to move (ticks)
+                power = 0.2;  //set power
                 if (first_time_in_state()) {
+                    set_hang_encoders();
                     hang_backward();
                 }
                 telemetry.addData("3 - ","backward=" + degrees + "p=" + power); //displays distance and power to phone screen
@@ -72,23 +73,38 @@ public class T9015Test extends T9015Hardware {
                     move_to_next_state();
                 break;
             case 5:
-                degrees = 90;  //set distance to move (ticks)
+                degrees = 45;
                 power = 0.25;  //set power
                 if (first_time_in_state()) {
+                    set_hang_encoders();
                     hang_forward();
-                    delayStart = System.currentTimeMillis();
+                    delayStart = System.currentTimeMillis();    // set timer
                 }
-                telemetry.addData("4 - ", "forward=" + degrees + "p=" + power); //displays distance and power to phone screen
+                telemetry.addData("5 - ", "forward=" + degrees + "p=" + power); //displays distance and power to phone screen
 
                 // wait till the hanger moved to the desired degree, or time expired.
                 // The timer will help the case when the target is reached with a short degree.
-                if (has_hang_moved(degrees, power) || System.currentTimeMillis() - delayStart > 2000)
+                if (has_hang_moved(degrees, power) || System.currentTimeMillis() - delayStart > 2000){
+                    // this is the last step of the hanger, a few steps needed to be handled.
+                    reset_hang_encoders();  // in case the hanger did not reach the position (blocked?), we help it to reset.
+                    // there still some power in the hanger, which provent the hanger from dropping
                     move_to_next_state();
+                }
+
                 break;
             case 6:
-                reset_hang_encoders();
-                set_hang_power(0.0f);
+                if (first_time_in_state())
+                    delayStart = System.currentTimeMillis();    // reset timer
+
+                // wait till hang reset, also wait the climers become stable on top of the box
+                if (have_hang_encoders_reset() && System.currentTimeMillis() - delayStart > 2000) {
+                    move_to_next_state();
+                }
+                break;
+            case 7:
+                telemetry.addData("6 - ", "Drop climber");
                 drop_climber();
+                set_hang_power(0.0f); // cut off the hanger power.
                 move_to_next_state();
                 break;
             default:

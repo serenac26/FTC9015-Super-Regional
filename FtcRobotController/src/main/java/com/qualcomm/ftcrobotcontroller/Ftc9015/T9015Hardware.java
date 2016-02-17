@@ -54,7 +54,7 @@ public class T9015Hardware extends OpMode
     private final double WHEEL_CIRCUMFERENCE = WHEEL_DIAMETER * Math.PI;
     private final int TURN_45_DEGREES = 1000;
 
-    final int HANGER_45_DEGREES = 1000; // TODO to be tested out
+    final int HANGER_45_DEGREES = 100; // # of ticks per 45 degree.
 
 
 
@@ -475,17 +475,17 @@ public class T9015Hardware extends OpMode
     }
 
     void set_hang_forward() {
-            if (v_motor_left_hang != null)
-                v_motor_left_hang.setDirection(DcMotor.Direction.FORWARD);
-            if (v_motor_right_hang != null)
-                 v_motor_right_hang.setDirection (DcMotor.Direction.REVERSE);
-     }
-
-    void set_hang_backward() {
         if (v_motor_left_hang != null)
             v_motor_left_hang.setDirection(DcMotor.Direction.REVERSE);
         if (v_motor_right_hang != null)
             v_motor_right_hang.setDirection (DcMotor.Direction.FORWARD);
+     }
+
+    void set_hang_backward() {
+        if (v_motor_left_hang != null)
+            v_motor_left_hang.setDirection(DcMotor.Direction.FORWARD);
+        if (v_motor_right_hang != null)
+            v_motor_right_hang.setDirection (DcMotor.Direction.REVERSE);
     }
 
     void turn(boolean left) {
@@ -1059,33 +1059,6 @@ public class T9015Hardware extends OpMode
 
     } // a_right_encoder_count
 
-    int right_hang_encoder_count = 0;
-    int right_hang_encoder_count ()
-    {
-        int l_return = 0;
-
-        if (v_motor_right_hang != null)
-        {
-            l_return = v_motor_right_hang.getCurrentPosition ();
-        }
-        right_hang_encoder_count = l_return;
-        return l_return;
-
-    }
-
-    int left_hang_encoder_count = 0;
-    int left_hang_encoder_count ()
-    {
-        int l_return = 0;
-
-        if (v_motor_left_hang != null)
-        {
-            l_return = v_motor_left_hang.getCurrentPosition ();
-        }
-        left_hang_encoder_count = l_return;
-        return l_return;
-
-    }
     //--------------------------------------------------------------------------
     //
     // has_left_drive_encoder_reached
@@ -1169,6 +1142,11 @@ public class T9015Hardware extends OpMode
     void reset_encoder(DcMotor motor) {
         if (motor != null) {
             motor.setMode(DcMotorController.RunMode.RESET_ENCODERS);
+        }
+    }
+
+    void set_encoder(DcMotor motor) {
+        if (motor != null) {
             motor.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
         }
     }
@@ -1257,6 +1235,12 @@ public class T9015Hardware extends OpMode
             }
         }
         set_hang_power(power);
+    }
+
+    public void set_hang_encoders ()
+    {
+        set_encoder(v_motor_left_hang);
+        set_encoder(v_motor_right_hang);
     }
 
     public void reset_hang_encoders ()
@@ -1463,79 +1447,12 @@ public class T9015Hardware extends OpMode
 
     } // have_drive_encoders_reset
 
-    boolean has_right_hang_encoder_reset ()
-    {
-        //
-        // Assume failure.
-        //
-        boolean l_return = false;
-
-        //
-        // Has the right encoder reached zero?
-        //
-        if (right_hang_encoder_count() == 0)
-        {
-            //
-            // Set the status to a positive indication.
-            //
-            l_return = true;
-        }
-
-        //
-        // Return the status.
-        //
-        return l_return;
-
-    }
-
-    boolean has_left_hang_encoder_reset ()
-    {
-        //
-        // Assume failure.
-        //
-        boolean l_return = false;
-
-        //
-        // Has the right encoder reached zero?
-        //
-        if (left_hang_encoder_count() == 0)
-        {
-            //
-            // Set the status to a positive indication.
-            //
-            l_return = true;
-        }
-
-        //
-        // Return the status.
-        //
-        return l_return;
-
-    }
-
     boolean have_hang_encoders_reset ()
     {
-        //
-        // Assume failure.
-        //
-        boolean l_return = false;
-
-        //
-        // Have the encoders reached zero?
-        //
-        if (has_left_hang_encoder_reset() && has_right_hang_encoder_reset ())
-        {
-            //
-            // Set the status to a positive indication.
-            //
-            l_return = true;
-        }
-
-        //
-        // Return the status.
-        //
-        return l_return;
-
+        int lcnt = v_motor_left_hang.getCurrentPosition ();
+        int rcnt = v_motor_right_hang.getCurrentPosition ();
+        telemetry.addData("Hang position: ", lcnt + ", " + rcnt);
+        return lcnt == 0 && rcnt == 0;
     }
     //--------------------------------------------------------------------------
     //
