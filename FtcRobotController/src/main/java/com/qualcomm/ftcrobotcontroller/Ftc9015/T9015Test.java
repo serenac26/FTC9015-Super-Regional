@@ -14,6 +14,7 @@ public class T9015Test extends T9015Hardware {
     private boolean v_inState;
     //private boolean v_forward;
     //private boolean v_turn_left;
+    FtcConfig ftcConfig=new FtcConfig();
 
     private double degrees = 0;
     private double power = 0;
@@ -29,6 +30,7 @@ public class T9015Test extends T9015Hardware {
         super.init();
         v_state = 0;
         v_inState = false;
+        ftcConfig.init(hardwareMap.appContext, this);
     }
 
     @Override
@@ -38,7 +40,11 @@ public class T9015Test extends T9015Hardware {
                 // Reset the encoders to ensure they are at a known good value.
                 telemetry.addData("0 - ","init");
                 set_hang_encoders();
+                set_servo_down();
                 move_to_next_state();
+                telemetry.addData("ColorIsRed", Boolean.toString(ftcConfig.param.colorIsRed));
+                telemetry.addData("DelayInSec", Integer.toString(ftcConfig.param.delayInSec));
+                telemetry.addData("AutonType", ftcConfig.param.autonType);
                 break;
             case 1:
                 //only need to initialize encoders on first time in state
@@ -81,7 +87,6 @@ public class T9015Test extends T9015Hardware {
                     delayStart = System.currentTimeMillis();    // set timer
                 }
                 telemetry.addData("5 - ", "forward=" + degrees + "p=" + power); //displays distance and power to phone screen
-
                 // wait till the hanger moved to the desired degree, or time expired.
                 // The timer will help the case when the target is reached with a short degree.
                 if (has_hang_moved(degrees, power) || System.currentTimeMillis() - delayStart > 2000){

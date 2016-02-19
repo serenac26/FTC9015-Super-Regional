@@ -57,6 +57,7 @@ public class T9015ColorSensorDriver extends OpMode
   //public ColorSensorDevice device = ColorSensorDevice.MODERN_ROBOTICS_I2C;
   public ColorSensorDevice device = ColorSensorDevice.MODERN_ROBOTICS_I2C;
 
+  FtcConfig ftcConfig=new FtcConfig();
   ColorSensor colorSensor;
   DeviceInterfaceModule cdim;
   LED led;
@@ -68,7 +69,7 @@ public class T9015ColorSensorDriver extends OpMode
   UltrasonicSensor ultra;
   double us_value;
   int n = 0;
-  T9015ColorSensor mrc;
+
 
   private Servo s_beacon, s_pull;
 
@@ -77,13 +78,14 @@ public class T9015ColorSensorDriver extends OpMode
 
   {
 
+/*
     //hardwareMap.logDevices();
     telemetry.addData("00", "init");
     s_beacon = hardwareMap.servo.get("sbeacon");
     s_pull = hardwareMap.servo.get("spull");
     telemetry.addData("00a", "init sbeacon");
     s_pull.setPosition(0.95);
-    s_beacon.setPosition(RobotInfo.BEACON_LEFT);
+      s_beacon.setPosition(RobotInfo.BEACON_LEFT);
 
     //cdim = hardwareMap.deviceInterfaceModule.get("dim");
 
@@ -115,6 +117,7 @@ public class T9015ColorSensorDriver extends OpMode
       telemetry.addData("03", "touch=" + led_on);
       enableLed(led_on);
     }
+*/
 
     //led = hardwareMap.led.get("led");
     //if (led != null) {
@@ -123,7 +126,7 @@ public class T9015ColorSensorDriver extends OpMode
 
     ods = hardwareMap.opticalDistanceSensor.get("ods");
     if (ods != null) {
-      ods.enableLed(true);
+      ods.enableLed(false);
       ods_val = ods.getLightDetected();
       ods_int = ods.getLightDetectedRaw();
       telemetry.addData("03a", "ods=" + ods_int + " " + ods_val);
@@ -135,6 +138,10 @@ public class T9015ColorSensorDriver extends OpMode
       telemetry.addData("04", "ultra=" + us_value);
     }
 
+      ftcConfig.init(hardwareMap.appContext, this);
+      telemetry.addData("ColorIsRed", Boolean.toString(ftcConfig.param.colorIsRed));
+      telemetry.addData("DelayInSec", Integer.toString(ftcConfig.param.delayInSec));
+      telemetry.addData("AutonType", ftcConfig.param.autonType);
 
   }
 
@@ -167,6 +174,7 @@ public class T9015ColorSensorDriver extends OpMode
       enableLed(led_on);
     }
 */
+/*
     enableLed(false);
 
     switch (device) {
@@ -181,8 +189,10 @@ public class T9015ColorSensorDriver extends OpMode
 
           break;
     }
+*/
 
     if (ods!=null) {
+        ods.enableLed(true);
       ods_val = ods.getLightDetected();
       ods_int = ods.getLightDetectedRaw();
       telemetry.addData("03a", "ods=" + ods_int + " " + ods_val);
@@ -191,11 +201,17 @@ public class T9015ColorSensorDriver extends OpMode
       us_value = ultra.getUltrasonicLevel();
       telemetry.addData("04", "ultra=" + us_value);
     }
+      //ftcConfig.init(hardwareMap.appContext, this);
+      telemetry.addData("ColorIsRed", Boolean.toString(ftcConfig.param.colorIsRed));
+      telemetry.addData("DelayInSec", Integer.toString(ftcConfig.param.delayInSec));
+      telemetry.addData("AutonType", ftcConfig.param.autonType);
+/*
       telemetry.addData("Clear", colorSensor.alpha());
       telemetry.addData("Red  ", colorSensor.red());
       telemetry.addData("Green", colorSensor.green());
       telemetry.addData("Blue ", colorSensor.blue());
       telemetry.addData("Hue", hsvValues[0]);
+*/
 /*
     mrc.get_color();
     telemetry.addData("mClear", mrc.alpha);
@@ -205,6 +221,7 @@ public class T9015ColorSensorDriver extends OpMode
     telemetry.addData("mHue", mrc.hsvValues[0]);
 
 */
+  /*  //<editor-fold desc="Description">
     if ( (colorSensor.blue()>=1))
     {
       s_beacon.setPosition(RobotInfo.BEACON_RIGHT);
@@ -213,7 +230,8 @@ public class T9015ColorSensorDriver extends OpMode
     {
       s_beacon.setPosition(RobotInfo.BEACON_LEFT);
     }
-
+    //</editor-fold>
+*/
 
 
 //      relativeLayout.post(new Runnable() {

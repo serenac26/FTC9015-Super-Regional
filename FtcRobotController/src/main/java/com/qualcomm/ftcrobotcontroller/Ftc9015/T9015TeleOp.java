@@ -25,7 +25,7 @@ public class T9015TeleOp extends OpMode { // T9015Hardware { // OpMode {
     // TETRIX VALUES.
 
 
-    final static double ARM_MIN_RANGE  = 0.54;
+    final static double ARM_MIN_RANGE  = 0.57;
     final static double ARM_MAX_RANGE  = 0.95;
 
     final static double BACK_DOWN  = 0.001;
@@ -110,14 +110,14 @@ public class T9015TeleOp extends OpMode { // T9015Hardware { // OpMode {
         sback = hardwareMap.servo.get("sback");
 
         // back plate servo
-     //   sclimber = hardwareMap.servo.get("sclimber");
+        sclimber = hardwareMap.servo.get("sclimber");
+        sclimber.setPosition(RobotInfo.CLIMBER_LOCK_POSITION);
 
         // motor for the puller tape
         pull = hardwareMap.dcMotor.get("pull");
 
         // motor for the slider in the back
         slide = hardwareMap.dcMotor.get("slide");
-        //sclimber.setPosition(CLIMBER_START);
 
         //ods = hardwareMap.opticalDistanceSensor.get("ods");
         //ods.enableLed(true);
@@ -129,12 +129,10 @@ public class T9015TeleOp extends OpMode { // T9015Hardware { // OpMode {
 
         // init position for the back plate servo is down
         backPosition = sback.getPosition();
-    //    sclimber.setPosition(CLIMBER_START);
-    //    climberPosition = sclimber.getPosition();
 
         telemetry.addData("Text", "*** 9015 Robot Init Data***");
         telemetry.addData("i01", "arm:  " + String.format("%.2f", armPosition));
-     //   telemetry.addData("i02", "climber: " + String.format("%.2f ", climberPosition) );
+        telemetry.addData("i02", "climber: " + String.format("%.2f ", climberPosition) );
         telemetry.addData("i03", "back: " + String.format("%.2f", backPosition));
      //   telemetry.addData("i04", "ods: " + String.format("%.2f", ods_val));
     }
@@ -259,19 +257,19 @@ public class T9015TeleOp extends OpMode { // T9015Hardware { // OpMode {
             // clip the position values so that they never exceed their allowed range.
             backPosition = Range.clip(backPosition, BACK_DOWN, BACK_UP);
 
-/*
+
             climberPosition = sclimber.getPosition();
             if (gamepad2.y) {
                 // if the gamepad2.y, drop the climber
-                sclimber.setPosition(CLIMBER_START);
+                sclimber.setPosition(RobotInfo.CLIMBER_LOCK_POSITION);
             } else if (gamepad2.a) {
                 // if the gamepad2.y, drop the climber
-                sclimber.setPosition(CLIMBER_END);
+                sclimber.setPosition(RobotInfo.CLIMBER_RELEASE_POSITION);
             } else {
                 sclimber.setPosition(climberPosition);
             }
 
-*/
+
 		/*
 		 * Send telemetry data back to driver station. Note that if we are using
 		 * a legacy NXT-compatible motor controller, then the getPower() method

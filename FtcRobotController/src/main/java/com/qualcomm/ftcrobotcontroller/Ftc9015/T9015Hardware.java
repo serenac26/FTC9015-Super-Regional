@@ -239,7 +239,7 @@ public class T9015Hardware extends OpMode
 
             v_servo_climber = null;
         }
-
+/*
         try
         {
             v_servo_beacon = hardwareMap.servo.get ("sbeacon");
@@ -251,7 +251,7 @@ public class T9015Hardware extends OpMode
 
             v_servo_beacon = null;
         }
-
+*/
         double l_hand_position = 0.5;
 
         set_direction_forward(true);
@@ -275,14 +275,15 @@ public class T9015Hardware extends OpMode
         {
             v_ultra = hardwareMap.ultrasonicSensor.get ("ultra");
         }
-        catch (Exception p_exception)
-        {
-            m_warning_message ("ultra");
-            DbgLog.msg (p_exception.getLocalizedMessage ());
+        catch (Exception p_exception) {
+            m_warning_message("ultra");
+            DbgLog.msg(p_exception.getLocalizedMessage());
 
             v_ultra = null;
         }
 
+        init_servos();
+        /*
         try
         {
             v_touch = hardwareMap.touchSensor.get ("touch");
@@ -294,39 +295,32 @@ public class T9015Hardware extends OpMode
 
             v_touch = null;
         }
-
-        try
-        {
-            v_color = hardwareMap.colorSensor.get ("mr_color");
-            if (v_color!=null)
-            {
-                v_color.enableLed(false); // passive mode
-            }
-        }
-        catch (Exception p_exception)
-        {
-            m_warning_message ("mr_color");
-            DbgLog.msg (p_exception.getLocalizedMessage ());
-
-            v_color = null;
-        }
-
+*/
     } // init
-
-    void beacon_left()
+    void puller_up()
     {
-        v_servo_beacon.setPosition(RobotInfo.BEACON_LEFT);
+        telemetry.addData("puller-", "up");
+        v_servo_puller.setPosition(RobotInfo.PULLER_UP_POSITION);
     }
 
-    void beacon_right()
+    void puller_down()
     {
-        v_servo_beacon.setPosition(RobotInfo.BEACON_RIGHT);
+        telemetry.addData("puller-", "down");
+        v_servo_puller.setPosition(RobotInfo.PULLER_DOWN_POSITION);
     }
 
-    void beacon_down()
+    void back_up()
     {
-        v_servo_beacon.setPosition(RobotInfo.BEACON_DOWN);
+        telemetry.addData("back-", "up");
+        v_servo_back.setPosition(RobotInfo.BACK_UP_POSITION);
     }
+
+    void back_down()
+    {
+        telemetry.addData("back-", "down");
+        v_servo_back.setPosition(RobotInfo.BACK_DOWN_POSITION);
+    }
+
 
     double us_value=0;
     boolean reach_wall(double distance)
@@ -406,15 +400,33 @@ public class T9015Hardware extends OpMode
 
     }
 
-   void set_servo_down ()
+
+    void init_servos ()
     {
         if (v_servo_puller != null)
         {
-            v_servo_puller.setPosition(H_ARM_MAX_RANGE);
+            v_servo_puller.setPosition(RobotInfo.PULLER_UP_POSITION);
         }
         if (v_servo_back != null)
         {
-            v_servo_back.setPosition(H_BACK_MIN_RANGE);
+            v_servo_back.setPosition(RobotInfo.BACK_DOWN_POSITION);
+        }
+        if (v_servo_climber != null)
+        {
+            v_servo_climber.setPosition(RobotInfo.CLIMBER_LOCK_POSITION);
+        }
+
+    }
+
+    void set_servo_down ()
+    {
+        if (v_servo_puller != null)
+        {
+            v_servo_puller.setPosition(RobotInfo.PULLER_DOWN_POSITION);
+        }
+        if (v_servo_back != null)
+        {
+            v_servo_back.setPosition(RobotInfo.BACK_DOWN_POSITION);
         }
 
     }
@@ -423,11 +435,11 @@ public class T9015Hardware extends OpMode
     {
         if (v_servo_puller != null)
         {
-            v_servo_puller.setPosition(H_ARM_MIN_RANGE);
+            v_servo_puller.setPosition(RobotInfo.PULLER_UP_POSITION);
         }
         if (v_servo_back != null)
         {
-            v_servo_back.setPosition(H_BACK_MAX_RANGE);
+            v_servo_back.setPosition(RobotInfo.BACK_UP_POSITION);
         }
 
     }
@@ -1287,6 +1299,14 @@ public class T9015Hardware extends OpMode
             double p_left_power, double p_right_power)
     {
         go_forward();
+        set_drive_power(p_left_power,p_right_power);
+    }
+
+
+    void drive_back_no_encoder(
+            double p_left_power, double p_right_power)
+    {
+        go_backward();
         set_drive_power(p_left_power,p_right_power);
     }
     //--------------------------------------------------------------------------
