@@ -40,8 +40,8 @@ public class T9015Hardware extends OpMode
      *
      * The system calls this member when the class is instantiated.
      */
-    final static double H_ARM_MIN_RANGE  = 0.52;
-    final static double H_ARM_MAX_RANGE  = 0.95;
+    final static double SPULL_MIN_RANGE = 0.57;
+    final static double SPULL_MAX_RANGE  = 0.95;
 
     final static double H_BACK_MIN_RANGE  = 0.001;
     final static double H_BACK_MAX_RANGE  = .999;
@@ -1711,7 +1711,7 @@ public class T9015Hardware extends OpMode
     /**
      * Manage the aspects of the rearleft drive motor.
      */
-    private DcMotor v_motor_left_hang;
+    protected DcMotor v_motor_left_hang;
 
     //--------------------------------------------------------------------------
     //
@@ -1720,7 +1720,7 @@ public class T9015Hardware extends OpMode
     /**
      * Manage the aspects of the rear right drive motor.
      */
-    private DcMotor v_motor_right_hang;
+    protected DcMotor v_motor_right_hang;
 
     //--------------------------------------------------------------------------
     //
@@ -1729,7 +1729,7 @@ public class T9015Hardware extends OpMode
     /**
      * Motor to pull the tape.
      */
-    private DcMotor v_motor_puller;
+    protected DcMotor v_motor_puller;
 
     //--------------------------------------------------------------------------
     //
@@ -1738,7 +1738,7 @@ public class T9015Hardware extends OpMode
     /**
      * Motor to control the slider to get the zip line.
      */
-    private DcMotor v_motor_slider;
+    protected DcMotor v_motor_slider;
 
 
      //--------------------------------------------------------------------------
@@ -1748,7 +1748,7 @@ public class T9015Hardware extends OpMode
     /**
      * Use to guide the puller angle.
      */
-    private Servo v_servo_puller;
+    protected Servo v_servo_puller;
 
     //--------------------------------------------------------------------------
     //
@@ -1757,7 +1757,7 @@ public class T9015Hardware extends OpMode
     /**
      * Use to control the back plate
      */
-    private Servo v_servo_back;
+    protected Servo v_servo_back;
 
     //--------------------------------------------------------------------------
     //
@@ -1766,7 +1766,7 @@ public class T9015Hardware extends OpMode
     /**
      * Use to drop the climber
      */
-    private Servo v_servo_climber;
+    protected Servo v_servo_climber;
 
     //--------------------------------------------------------------------------
     //
